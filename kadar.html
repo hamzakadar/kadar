@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kadar OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08080E;--bg2:#0F0F1A;--bg3:#171726;--bg4:#1E1E30;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
+  --teal:#00C9A7;--teal-d:rgba(0,201,167,.1);--teal-m:rgba(0,201,167,.2);
+  --gold:#F0A500;--gold-d:rgba(240,165,0,.1);--gold-m:rgba(240,165,0,.2);
+  --purple:#9B6DFF;--purple-d:rgba(155,109,255,.1);--purple-m:rgba(155,109,255,.2);
+  --red:#FF4060;--red-d:rgba(255,64,96,.1);
+  --sky:#38BDF8;--sky-d:rgba(56,189,248,.1);
+  --orange:#FF7A3D;--orange-d:rgba(255,122,61,.1);
+  --green:#22C55E;--green-d:rgba(34,197,94,.1);
+  --text:#EEEEF5;--text2:rgba(238,238,245,.48);--text3:rgba(238,238,245,.22);
+  --r:13px;--rs:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(8,8,14,.9);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 1.5rem;}
+.logo{font-family:'Space Mono',monospace;font-weight:700;font-size:16px;letter-spacing:-.03em;cursor:pointer;}
+.logo-k{color:var(--teal);}.logo-dot{color:var(--gold);font-size:20px;vertical-align:middle;}
+.nav-tabs{display:flex;gap:2px;}
+.ntab{padding:5px 12px;border-radius:6px;border:none;background:transparent;color:var(--text2);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;}
+.ntab:hover{color:var(--text);background:var(--bg3);}
+.ntab.active{background:var(--teal-d);color:var(--teal);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.xp-pill{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);background:var(--gold-d);border:1px solid rgba(240,165,0,.25);padding:3px 10px;border-radius:20px;cursor:pointer;}
+.nav-clock{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);}
+
+/* HERO */
+.hero{padding:2rem 1.5rem 1.25rem;display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:center;max-width:1100px;margin:0 auto;}
+.hero-eye{font-size:10px;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;font-weight:500;margin-bottom:5px;}
+.hero-h{font-size:clamp(26px,4vw,44px);font-weight:700;line-height:1.1;letter-spacing:-.03em;}
+.hero-h .acc{color:var(--teal);}
+.hero-sub{font-size:13px;color:var(--text2);margin-top:8px;line-height:1.6;max-width:360px;}
+
+/* SCORE RING */
+.ring-wrap{position:relative;width:140px;height:140px;flex-shrink:0;}
+.ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg);}
+.r-bg{fill:none;stroke:var(--bg3);stroke-width:6;}
+.r-t{fill:none;stroke:var(--teal);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
+.r-g{fill:none;stroke:var(--gold);stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
+.r-p{fill:none;stroke:var(--purple);stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
+.ring-num{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;line-height:1;}
+.ring-lbl{font-size:9px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:2px;}
+
+/* PANELS */
+.panels{max-width:1100px;margin:0 auto;padding:0 1.5rem 3rem;}
+.panel{display:none;animation:fadeIn .2s ease;}.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;}
+.g2-3{display:grid;grid-template-columns:2fr 1fr;gap:12px;}
+.gap{height:12px;}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.2rem;}
+.card-teal{border-color:rgba(0,201,167,.18);}
+.card-gold{border-color:rgba(240,165,0,.18);}
+.card-purple{border-color:rgba(155,109,255,.18);}
+.card-sky{border-color:rgba(56,189,248,.18);}
+.card-orange{border-color:rgba(255,122,61,.18);}
+.card-green{border-color:rgba(34,197,94,.18);}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;}
+.ct{font-size:10px;font-weight:500;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
+
+/* STATS */
+.stat{background:var(--bg3);border-radius:var(--rs);padding:.85rem 1rem;}
+.sv{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;line-height:1;}
+.sv.teal{color:var(--teal);}.sv.gold{color:var(--gold);}.sv.purple{color:var(--purple);}.sv.sky{color:var(--sky);}.sv.orange{color:var(--orange);}.sv.green{color:var(--green);}
+.sl{font-size:10px;color:var(--text3);margin-top:2px;}
+
+/* PROGRESS */
+.pb-wrap{margin:5px 0;}
+.pb-track{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;}
+.pb-fill{height:100%;border-radius:2px;transition:width .6s ease;}
+.pb-teal{background:var(--teal);}.pb-gold{background:var(--gold);}.pb-purple{background:var(--purple);}.pb-sky{background:var(--sky);}.pb-orange{background:var(--orange);}.pb-green{background:var(--green);}
+.pb-meta{display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:2px;}
+
+/* FORMS */
+input,select,textarea{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:12px;padding:7px 10px;width:100%;outline:none;transition:border-color .15s;}
+input:focus,select:focus,textarea:focus{border-color:var(--teal);}
+select option{background:var(--bg2);}
+.row{display:flex;gap:6px;align-items:center;}
+.rb{display:flex;justify-content:space-between;align-items:center;}
+.col{display:flex;flex-direction:column;gap:6px;}
+.mt6{margin-top:6px;}.mt10{margin-top:10px;}.mt14{margin-top:14px;}
+
+/* BUTTONS */
+.btn{padding:6px 13px;border-radius:var(--rs);border:1px solid var(--border2);background:transparent;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.btn:hover{background:var(--bg3);}
+.btn-teal{background:var(--teal-d);border-color:rgba(0,201,167,.3);color:var(--teal);}
+.btn-teal:hover{background:var(--teal-m);}
+.btn-gold{background:var(--gold-d);border-color:rgba(240,165,0,.3);color:var(--gold);}
+.btn-gold:hover{background:var(--gold-m);}
+.btn-red{background:var(--red-d);border-color:rgba(255,64,96,.3);color:var(--red);}
+.btn-purple{background:var(--purple-d);border-color:rgba(155,109,255,.3);color:var(--purple);}
+.btn-sky{background:var(--sky-d);border-color:rgba(56,189,248,.3);color:var(--sky);}
+.btn-orange{background:var(--orange-d);border-color:rgba(255,122,61,.3);color:var(--orange);}
+.btn-green{background:var(--green-d);border-color:rgba(34,197,94,.3);color:var(--green);}
+.btn-full{width:100%;text-align:center;padding:8px;}
+
+/* LIST ITEMS */
+.li{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--bg3);border-radius:var(--rs);margin-bottom:4px;font-size:12px;}
+.li:last-child{margin-bottom:0;}
+.li-lbl{color:var(--text);}
+.li-sub{font-size:9px;color:var(--text3);margin-top:1px;}
+.li-amt{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:500;}
+.badge-teal{background:var(--teal-d);color:var(--teal);}
+.badge-gold{background:var(--gold-d);color:var(--gold);}
+.badge-purple{background:var(--purple-d);color:var(--purple);}
+.badge-sky{background:var(--sky-d);color:var(--sky);}
+.badge-orange{background:var(--orange-d);color:var(--orange);}
+.badge-green{background:var(--green-d);color:var(--green);}
+
+/* GOAL ITEMS */
+.gi{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border-radius:var(--rs);margin-bottom:4px;cursor:pointer;transition:background .12s;}
+.gi:hover{background:rgba(255,255,255,.04);}
+.gck{width:16px;height:16px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:8px;}
+.gck.done{background:var(--teal-d);border-color:var(--teal);color:var(--teal);}
+.gt{font-size:12px;color:var(--text);}
+.gt.done{text-decoration:line-through;color:var(--text3);}
+
+/* AYAH */
+.ayah-card{background:linear-gradient(135deg,rgba(0,201,167,.07),transparent);border:1px solid rgba(0,201,167,.15);border-radius:var(--r);padding:1.1rem 1.2rem;font-size:12px;line-height:1.8;color:var(--text2);font-style:italic;}
+.ayah-src{font-style:normal;font-size:9px;color:var(--teal);margin-top:5px;opacity:.8;}
+.quote-card{background:linear-gradient(135deg,rgba(155,109,255,.07),transparent);border:1px solid rgba(155,109,255,.15);border-radius:var(--r);padding:1.1rem 1.2rem;font-size:12px;color:var(--text2);line-height:1.7;font-style:italic;}
+.quote-src{font-style:normal;font-size:9px;color:var(--purple);margin-top:4px;opacity:.8;}
+
+/* PRAYERS */
+.prayer-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.pbtn{padding:10px 3px;border-radius:var(--rs);border:1px solid var(--border);background:var(--bg3);font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--text2);cursor:pointer;text-align:center;transition:all .15s;}
+.pbtn.done{background:var(--teal-d);border-color:rgba(0,201,167,.3);color:var(--teal);font-weight:500;}
+.pck{font-size:9px;margin-top:2px;}
+
+/* DHIKR */
+.dhikr-btn{width:100%;padding:16px;background:var(--teal-d);border:1px solid rgba(0,201,167,.25);border-radius:var(--r);color:var(--teal);font-family:'Space Mono',monospace;font-size:28px;font-weight:700;cursor:pointer;transition:all .12s;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.dhikr-btn:active{transform:scale(.97);}
+.dhikr-sub{font-size:9px;color:var(--teal);opacity:.6;letter-spacing:.1em;text-transform:uppercase;font-family:'Space Grotesk',sans-serif;}
+
+/* TAHAJJUD */
+.tah-header{display:flex;align-items:center;gap:10px;margin-bottom:.9rem;}
+.tah-icon{width:34px;height:34px;border-radius:50%;background:var(--sky-d);border:1px solid rgba(56,189,248,.25);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.t-dots{display:flex;gap:5px;margin-top:7px;}
+.t-dot{flex:1;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text3);font-weight:500;transition:all .15s;}
+.t-dot.done{background:var(--sky-d);border-color:rgba(56,189,248,.35);color:var(--sky);}
+.dua-card{background:var(--bg3);border-radius:var(--rs);padding:10px 12px;margin-bottom:4px;border:1px solid var(--border);}
+.dua-card.accepted{background:rgba(0,201,167,.06);border-color:rgba(0,201,167,.25);}
+.dua-text{font-size:12px;color:var(--text);line-height:1.55;margin-bottom:5px;}
+.dua-footer{display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.dua-date{font-size:9px;color:var(--text3);}
+.dua-status{font-size:9px;padding:2px 7px;border-radius:20px;}
+.dua-status.pending{background:var(--sky-d);color:var(--sky);}
+.dua-status.accepted{background:var(--teal-d);color:var(--teal);font-weight:500;}
+.acc-header{font-size:10px;color:var(--teal);letter-spacing:.08em;text-transform:uppercase;margin:10px 0 6px;display:flex;align-items:center;gap:5px;}
+.acc-header::before{content:'';display:block;width:14px;height:1px;background:var(--teal);opacity:.5;}
+
+/* STREAK */
+.streak-big{font-family:'Space Mono',monospace;font-size:56px;font-weight:700;color:var(--teal);line-height:1;text-align:center;padding:1rem 0 .4rem;}
+.streak-u{font-size:11px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;text-align:center;margin-bottom:.9rem;}
+.urge-tip{background:var(--bg3);border-left:2px solid var(--teal);border-radius:0 var(--rs) var(--rs) 0;padding:8px 12px;font-size:12px;color:var(--text2);line-height:1.55;margin-top:8px;display:none;}
+
+/* HABITS */
+.habit-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.habit-name{font-size:11px;color:var(--text2);width:105px;flex-shrink:0;}
+.habit-days{display:flex;gap:3px;flex:1;}
+.hd{height:26px;border-radius:5px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;transition:all .13s;flex:1;}
+.hd.dt{background:var(--teal-d);border-color:rgba(0,201,167,.35);}
+.hd.dg{background:var(--gold-d);border-color:rgba(240,165,0,.35);}
+
+/* =================== GAME SECTION =================== */
+.level-banner{background:linear-gradient(135deg,rgba(155,109,255,.12),rgba(0,201,167,.06));border:1px solid rgba(155,109,255,.2);border-radius:var(--r);padding:1.2rem 1.4rem;display:flex;align-items:center;gap:1.2rem;margin-bottom:12px;}
+.level-badge{width:56px;height:56px;border-radius:50%;background:var(--purple-d);border:2px solid rgba(155,109,255,.4);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
+.level-num{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--purple);line-height:1;}
+.level-lbl{font-size:8px;color:var(--purple);opacity:.7;letter-spacing:.06em;}
+.level-info{flex:1;}
+.level-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.level-sub{font-size:11px;color:var(--text2);margin-bottom:8px;}
+.xp-bar-track{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.xp-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--purple),var(--teal));transition:width .8s ease;}
+.xp-meta{display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:3px;}
+
+.quest-card{background:var(--bg3);border-radius:var(--rs);padding:10px 12px;margin-bottom:5px;display:flex;align-items:center;gap:10px;border:1px solid var(--border);}
+.quest-card.done{opacity:.5;border-color:transparent;}
+.quest-icon{font-size:18px;flex-shrink:0;width:30px;text-align:center;}
+.quest-info{flex:1;}
+.quest-name{font-size:12px;font-weight:500;color:var(--text);}
+.quest-desc{font-size:10px;color:var(--text3);margin-top:1px;}
+.quest-xp{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);font-weight:700;white-space:nowrap;}
+
+.achievement{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border-radius:var(--rs);margin-bottom:4px;}
+.ach-icon{font-size:20px;width:32px;text-align:center;}
+.ach-info{flex:1;}
+.ach-name{font-size:12px;font-weight:500;color:var(--text);}
+.ach-desc{font-size:10px;color:var(--text3);}
+.ach-locked{opacity:.3;filter:grayscale(1);}
+
+.leaderboard-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg3);border-radius:var(--rs);margin-bottom:4px;}
+.lb-rank{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;width:20px;color:var(--text3);}
+.lb-rank.gold{color:var(--gold);}
+.lb-name{flex:1;font-size:12px;color:var(--text);}
+.lb-xp{font-family:'Space Mono',monospace;font-size:11px;color:var(--purple);}
+
+/* =================== BUSINESS SECTION =================== */
+.pipeline-col{display:flex;flex-direction:column;gap:5px;}
+.pipeline-header{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;padding:5px 8px;border-radius:6px;margin-bottom:6px;text-align:center;}
+.ph-prospect{background:var(--sky-d);color:var(--sky);}
+.ph-pitched{background:var(--orange-d);color:var(--orange);}
+.ph-closed{background:var(--green-d);color:var(--green);}
+.deal-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:8px 10px;cursor:grab;transition:all .15s;}
+.deal-card:hover{border-color:var(--border2);}
+.deal-name{font-size:12px;font-weight:500;color:var(--text);}
+.deal-val{font-family:'Space Mono',monospace;font-size:11px;color:var(--green);margin-top:2px;}
+.deal-tag{font-size:9px;color:var(--text3);margin-top:2px;}
+.deal-actions{display:flex;gap:4px;margin-top:6px;}
+.deal-btn{flex:1;padding:3px;font-size:9px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;transition:all .12s;}
+.deal-btn:hover{background:var(--bg4);color:var(--text);}
+
+.skill-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg3);border-radius:var(--rs);margin-bottom:5px;}
+.skill-icon{font-size:18px;width:28px;text-align:center;}
+.skill-info{flex:1;}
+.skill-name{font-size:12px;font-weight:500;color:var(--text);}
+.skill-hrs{font-size:9px;color:var(--text3);margin-top:1px;}
+.skill-xp-bar{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-top:4px;}
+.skill-xp-fill{height:100%;background:var(--purple);border-radius:2px;transition:width .4s;}
+
+.idea-item{padding:8px 10px;background:var(--bg3);border-radius:var(--rs);margin-bottom:4px;font-size:12px;color:var(--text);line-height:1.5;border-left:2px solid var(--gold);border-top-left-radius:0;border-bottom-left-radius:0;}
+
+.pnl-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.pnl-row:last-child{border-bottom:none;}
+.pnl-label{color:var(--text2);}
+.pnl-val{font-family:'Space Mono',monospace;font-weight:700;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
+
+@media(max-width:680px){
+  .g2,.g3,.g4,.g2-3{grid-template-columns:1fr;}
+  .hero{grid-template-columns:1fr;}
+  .ring-wrap{margin:0 auto;}
+  .nav-tabs .ntab:not(.active){display:none;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" onclick="go('dash')"><span class="logo-k">K</span>adar<span class="logo-dot">·</span></div>
+  <div class="nav-tabs">
+    <button class="ntab active" onclick="go('dash')">Overview</button>
+    <button class="ntab" onclick="go('spirit')">Spirit</button>
+    <button class="ntab" onclick="go('disc')">Discipline</button>
+    <button class="ntab" onclick="go('biz')">Business</button>
+    <button class="ntab" onclick="go('game')">&#9651; Game</button>
+  </div>
+  <div class="nav-right">
+    <div class="xp-pill" onclick="go('game')" id="nav-xp">0 XP</div>
+    <div class="nav-clock" id="nav-clock"></div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div>
+    <div class="hero-eye">Good <span id="grt">morning</span>, Kadar</div>
+    <div class="hero-h">Build the man.<br><span class="acc">Day by day.</span></div>
+    <div class="hero-sub">Spirit. Discipline. Business. All tracked, all scored. Become who you said you would.</div>
+  </div>
+  <div class="ring-wrap">
+    <svg viewBox="0 0 140 140">
+      <circle class="r-bg" cx="70" cy="70" r="60"/>
+      <circle class="r-bg" cx="70" cy="70" r="48"/>
+      <circle class="r-bg" cx="70" cy="70" r="36"/>
+      <circle class="r-t" cx="70" cy="70" r="60" id="rng-s" stroke-dasharray="376.99" stroke-dashoffset="376.99"/>
+      <circle class="r-g" cx="70" cy="70" r="48" id="rng-w" stroke-dasharray="301.59" stroke-dashoffset="301.59"/>
+      <circle class="r-p" cx="70" cy="70" r="36" id="rng-d" stroke-dasharray="226.19" stroke-dashoffset="226.19"/>
+    </svg>
+    <div class="ring-center">
+      <div class="ring-num" id="life-score">0</div>
+      <div class="ring-lbl">kadar score</div>
+    </div>
+  </div>
+</div>
+
+<div class="panels">
+
+<!-- ========== OVERVIEW ========== -->
+<div class="panel active" id="panel-dash">
+  <div class="g4" style="margin-bottom:12px">
+    <div class="stat" style="cursor:pointer" onclick="go('spirit')">
+      <div class="sv teal" id="ov-p">0/5</div><div class="sl">prayers today</div>
+      <div class="pb-wrap mt6"><div class="pb-track"><div class="pb-fill pb-teal" id="ov-pb" style="width:0%"></div></div></div>
+    </div>
+    <div class="stat" style="cursor:pointer" onclick="go('disc')">
+      <div class="sv teal" id="ov-s">0</div><div class="sl">clean streak</div>
+      <div class="pb-wrap mt6"><div class="pb-track"><div class="pb-fill pb-teal" id="ov-sb" style="width:0%"></div></div></div>
+    </div>
+    <div class="stat" style="cursor:pointer" onclick="go('biz')">
+      <div class="sv gold" id="ov-i">$0</div><div class="sl">monthly revenue</div>
+      <div class="pb-wrap mt6"><div class="pb-track"><div class="pb-fill pb-gold" id="ov-ib" style="width:0%"></div></div></div>
+    </div>
+    <div class="stat" style="cursor:pointer" onclick="go('game')">
+      <div class="sv purple" id="ov-xp">0</div><div class="sl">total XP</div>
+      <div class="pb-wrap mt6"><div class="pb-track"><div class="pb-fill pb-purple" id="ov-xpb" style="width:0%"></div></div></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ch"><div class="ct">Today's focus</div></div>
+      <div id="focus-list"></div>
+      <div class="row mt10">
+        <input id="focus-in" type="text" placeholder="What matters most today?"/>
+        <button class="btn btn-teal" onclick="addFocus()">Add</button>
+      </div>
+    </div>
+    <div id="dash-quote" class="quote-card"></div>
+  </div>
+  <div class="gap"></div>
+  <div class="card">
+    <div class="ch"><div class="ct">Weekly habits</div></div>
+    <div id="ov-habits"></div>
+  </div>
+  <div class="gap"></div>
+  <div class="ayah-card"><div id="dash-ayah"></div><div class="ayah-src" id="dash-asrc"></div></div>
+</div>
+
+<!-- ========== SPIRIT ========== -->
+<div class="panel" id="panel-spirit">
+  <div class="g2">
+    <div class="card card-teal">
+      <div class="ch"><div class="ct">Daily prayers (fard)</div><span class="badge badge-teal" id="p-badge">0/5</span></div>
+      <div class="prayer-grid" id="prayer-grid"></div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="ct">Dhikr counter</div></div>
+      <button class="dhikr-btn" onclick="dhikr()" id="dhikr-btn">
+        <span id="dhikr-n">0</span>
+        <span class="dhikr-sub">tap · <span id="dhikr-lbl">subhanallah</span></span>
+      </button>
+      <div class="mt10 rb" style="font-size:10px;color:var(--text3)">
+        <span>Cycle <span id="dhikr-cyc">1</span>/3</span>
+        <button class="btn" onclick="resetDhikr()" style="font-size:10px;padding:3px 8px">Reset</button>
+      </div>
+      <div class="pb-wrap mt6"><div class="pb-track"><div class="pb-fill pb-teal" id="dhikr-bar" style="width:0%"></div></div>
+      <div class="pb-meta"><span>0</span><span id="dhikr-of">0/99</span><span>99</span></div></div>
+    </div>
+  </div>
+  <div class="gap"></div>
+  <div class="card card-sky">
+    <div class="tah-header">
+      <div class="tah-icon">☽</div>
+      <div>
+        <div class="ct" style="color:var(--sky);margin-bottom:2px">Tahajjud</div>
+        <div style="font-size:11px;color:var(--text2)">The night prayer — when the veil is thinnest. Log it and pour your heart out below.</div>
+      </div>
+    </div>
+    <div class="rb"><div style="font-size:10px;color:var(--text3)">This week</div><span class="badge badge-sky" id="tah-badge">0 nights</span></div>
+    <div class="t-dots" id="tah-dots"></div>
+    <div class="mt14">
+      <div class="ct" style="margin-bottom:7px">Dua journal</div>
+      <div class="col">
+        <textarea style="height:70px;resize:none" id="dua-input" placeholder="Write your dua here. Be specific. Ask Allah with full sincerity and certainty He hears you."></textarea>
+        <div class="row">
+          <input id="dua-tag" type="text" placeholder="Tag (rizq, health, guidance...)" style="flex:1"/>
+          <button class="btn btn-sky" onclick="addDua()">Submit dua</button>
+        </div>
+      </div>
+    </div>
+    <div class="mt14" id="pending-wrap">
+      <div style="font-size:10px;color:var(--sky);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:5px"><span style="display:block;width:12px;height:1px;background:var(--sky);opacity:.5"></span>Duas in progress</div>
+      <div id="pending-duas"></div>
+    </div>
+    <div id="accepted-wrap" style="margin-top:10px;display:none">
+      <div class="acc-header">Answered by Allah ✦</div>
+      <div id="accepted-duas"></div>
+    </div>
+  </div>
+  <div class="gap"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ch"><div class="ct">Quran reading</div><span class="badge badge-teal" id="quran-badge">0 pages</span></div>
+      <div class="row"><input type="number" id="quran-in" placeholder="Pages today" min="0"/><button class="btn btn-teal" onclick="logQuran()">Log</button></div>
+      <div class="pb-wrap mt10"><div class="pb-track"><div class="pb-fill pb-teal" id="quran-bar" style="width:0%"></div></div>
+      <div class="pb-meta"><span>Goal: 30 pages/week</span><span id="quran-lbl">0</span></div></div>
+    </div>
+    <div class="ayah-card"><div id="sp-ayah"></div><div class="ayah-src" id="sp-asrc"></div></div>
+  </div>
+  <div class="gap"></div>
+  <div class="card">
+    <div class="ch"><div class="ct">Reflection journal</div></div>
+    <textarea id="journal-in" placeholder="How was your spiritual state today? Grateful for? Working on?" style="height:80px;resize:none"></textarea>
+    <div class="rb mt10"><span style="font-size:9px;color:var(--text3)">Saved locally</span><button class="btn btn-teal" onclick="saveJournal()">Save</button></div>
+  </div>
+</div>
+
+<!-- ========== DISCIPLINE ========== -->
+<div class="panel" id="panel-disc">
+  <div class="g2">
+    <div class="card card-teal">
+      <div class="ch"><div class="ct">Clean streak</div></div>
+      <div class="streak-big" id="d-streak">0</div>
+      <div class="streak-u">days clean</div>
+      <div class="g2" style="gap:8px">
+        <div class="stat"><div class="sv teal" id="d-best">0</div><div class="sl">best ever</div></div>
+        <div class="stat"><div class="sv teal" id="d-mo">0</div><div class="sl">this month</div></div>
+      </div>
+      <div class="row mt10" style="gap:6px">
+        <button class="btn btn-teal btn-full" style="padding:10px" onclick="markClean()">✓ Today was clean</button>
+        <button class="btn btn-red btn-full" onclick="markRelapse()">↺ Reset</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="ct">Urge log</div></div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:9px;line-height:1.55">When you feel the pull — log it immediately. Naming it weakens it.</div>
+      <div class="row">
+        <select id="urge-sel" style="flex:1">
+          <option value="">What triggered it?</option>
+          <option>Boredom</option><option>Loneliness</option>
+          <option>Stress / anxiety</option><option>Mindless scrolling</option>
+          <option>Late night / can't sleep</option><option>Bad day</option>
+          <option>Content online</option><option>Other</option>
+        </select>
+        <button class="btn btn-teal" onclick="logUrge()">Log</button>
+      </div>
+      <div class="urge-tip" id="urge-tip"></div>
+      <div class="mt10" id="urge-list"></div>
+    </div>
+  </div>
+  <div class="gap"></div>
+  <div class="card">
+    <div class="ch"><div class="ct">Weekly habit tracker</div></div>
+    <div id="habit-tracker"></div>
+  </div>
+  <div class="gap"></div>
+  <div class="card">
+    <div class="ch"><div class="ct">Daily wins</div></div>
+    <div class="row"><input type="text" id="win-in" placeholder="Something you did right today..." style="flex:1"/><button class="btn btn-teal" onclick="addWin()">Add</button></div>
+    <div class="mt10" id="win-list"></div>
+  </div>
+</div>
+
+<!-- ========== BUSINESS ========== -->
+<div class="panel" id="panel-biz">
+  <div class="g4" style="margin-bottom:12px">
+    <div class="stat"><div class="sv gold" id="biz-rev">$0</div><div class="sl">monthly revenue</div></div>
+    <div class="stat"><div class="sv red" id="biz-exp" style="color:var(--red)">$0</div><div class="sl">expenses</div></div>
+    <div class="stat"><div class="sv green" id="biz-net">$0</div><div class="sl">net profit</div></div>
+    <div class="stat"><div class="sv purple" id="biz-deals">0</div><div class="sl">deals closed</div></div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="ch"><div class="ct">Deal pipeline</div>
+      <div class="row" style="gap:5px">
+        <input id="deal-name" type="text" placeholder="Client / deal name" style="width:130px"/>
+        <input id="deal-val" type="number" placeholder="$value" style="width:80px"/>
+        <button class="btn btn-green" onclick="addDeal()">+ Add deal</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div>
+        <div class="pipeline-header ph-prospect">Prospect</div>
+        <div class="pipeline-col" id="pipe-prospect"></div>
+      </div>
+      <div>
+        <div class="pipeline-header ph-pitched">Pitched</div>
+        <div class="pipeline-col" id="pipe-pitched"></div>
+      </div>
+      <div>
+        <div class="pipeline-header ph-closed">Closed ✓</div>
+        <div class="pipeline-col" id="pipe-closed"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <!-- INCOME / EXPENSES -->
+    <div>
+      <div class="card card-gold" style="margin-bottom:12px">
+        <div class="ch"><div class="ct">Log income</div></div>
+        <div class="col">
+          <input id="inc-desc" type="text" placeholder="Source (freelance, salary, client...)"/>
+          <div class="row"><input id="inc-amt" type="number" placeholder="Amount ($)" style="flex:1"/><button class="btn btn-gold" onclick="addIncome()">Add</button></div>
+        </div>
+        <div class="mt10" id="income-list"></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">Expenses</div></div>
+        <div class="row">
+          <input id="exp-desc" type="text" placeholder="Expense description" style="flex:1"/>
+          <input id="exp-amt" type="number" placeholder="$" style="width:70px"/>
+          <button class="btn btn-red" onclick="addExpense()">Add</button>
+        </div>
+        <div class="mt10" id="expense-list"></div>
+      </div>
+    </div>
+
+    <div>
+      <!-- SKILLS -->
+      <div class="card card-purple" style="margin-bottom:12px">
+        <div class="ch"><div class="ct">Skills I'm building</div></div>
+        <div class="row" style="margin-bottom:8px">
+          <input id="skill-name" type="text" placeholder="Skill (e.g. coding, sales)" style="flex:1"/>
+          <button class="btn btn-purple" onclick="addSkill()">Add</button>
+        </div>
+        <div id="skill-list"></div>
+      </div>
+
+      <!-- P&L SUMMARY -->
+      <div class="card card-green">
+        <div class="ch"><div class="ct">P&L this month</div></div>
+        <div id="pnl-table"></div>
+        <div class="gap"></div>
+        <div class="stat">
+          <div class="sv green" id="nw-val">$0</div>
+          <div class="sl">estimated net worth</div>
+        </div>
+        <div class="row mt10">
+          <input id="nw-in" type="number" placeholder="Update net worth ($)" style="flex:1"/>
+          <button class="btn btn-green" onclick="updateNW()">Set</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 IDEAS -->
+  <div class="gap"></div>
+  <div class="card card-orange">
+    <div class="ch">
+      <div>
+        <div class="ct" style="color:var(--orange)">10 business ideas a day</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:2px">Train your brain to see opportunity. Write 10 ideas — quality doesn't matter, volume does.</div>
+      </div>
+      <span class="badge badge-orange" id="idea-badge">0 today</span>
+    </div>
+    <div class="row">
+      <input id="idea-in" type="text" placeholder="An idea, any idea..." style="flex:1"/>
+      <button class="btn btn-orange" onclick="addIdea()">Add idea</button>
+    </div>
+    <div class="mt10" id="idea-list"></div>
+  </div>
+
+  <!-- ZAKAT -->
+  <div class="gap"></div>
+  <div class="card card-gold">
+    <div class="ch"><div class="ct">Zakat nisab tracker</div><span class="badge badge-gold">Nisab ≈ $5,200</span></div>
+    <div class="pb-wrap"><div class="pb-track" style="height:5px"><div class="pb-fill pb-gold" id="zakat-fill" style="width:0%"></div></div>
+    <div class="pb-meta mt6"><span>$0</span><span id="zakat-lbl">0% of nisab</span><span>$5,200</span></div></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:8px;line-height:1.55">When savings exceed nisab for one full lunar year, 2.5% is obligatory. Purifying wealth brings barakah in everything.</div>
+  </div>
+</div>
+
+<!-- ========== GAME ========== -->
+<div class="panel" id="panel-game">
+  <div class="level-banner">
+    <div class="level-badge">
+      <div class="level-num" id="level-num">1</div>
+      <div class="level-lbl">level</div>
+    </div>
+    <div class="level-info">
+      <div class="level-title" id="level-title">The Seeker</div>
+      <div class="level-sub" id="level-sub">You're just getting started. Every legend had a day one.</div>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+      <div class="xp-meta"><span id="xp-cur">0 XP</span><span id="xp-next">Next level: 100 XP</span></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card card-purple">
+      <div class="ch"><div class="ct">Daily quests</div><div style="font-size:10px;color:var(--text3)">Resets midnight</div></div>
+      <div id="quest-list"></div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="ct">Achievements</div></div>
+      <div id="achievement-list"></div>
+    </div>
+  </div>
+
+  <div class="gap"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ch"><div class="ct">XP breakdown</div></div>
+      <div id="xp-breakdown"></div>
+    </div>
+    <div class="card card-gold">
+      <div class="ch"><div class="ct">Hall of levels</div></div>
+      <div id="hall-levels"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /panels -->
+
+<script>
+// === STORAGE ===
+function ld(k,d){try{const v=localStorage.getItem('k2_'+k);return v?JSON.parse(v):d;}catch{return d;}}
+function sv(k,v){try{localStorage.setItem('k2_'+k,JSON.stringify(v));}catch{}}
+const S={
+  prayers:ld('prayers',{}),dhikr:ld('dhikr',0),dhikrCyc:ld('dhikrCyc',0),
+  quranW:ld('quranW',0),streak:ld('streak',0),best:ld('best',0),cleanMo:ld('cleanMo',0),
+  habits:ld('habits',{}),urges:ld('urges',[]),income:ld('income',[]),goals:ld('goals',[]),
+  focus:ld('focus',[]),wins:ld('wins',[]),journal:ld('journal',''),
+  duas:ld('duas',[]),tahajjud:ld('tahajjud',{}),
+  expenses:ld('expenses',[]),deals:ld('deals',[]),skills:ld('skills',[]),
+  ideas:ld('ideas',[]),netWorth:ld('netWorth',0),xp:ld('xp',0),
+};
+function persist(){Object.keys(S).forEach(k=>sv(k,S[k]));}
+
+const TODAY=new Date().toDateString();
+const NOW=new Date();
+const DAYS=['Su','Mo','Tu','We','Th','Fr','Sa'];
+const MO=NOW.getMonth();
+
+// === CLOCK ===
+function tick(){
+  const n=new Date();
+  document.getElementById('nav-clock').textContent=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · '+n.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+}
+tick();setInterval(tick,30000);
+const h=NOW.getHours();
+document.getElementById('grt').textContent=h<12?'morning':h<17?'afternoon':'evening';
+
+// === CONTENT ===
+const AYAHS=[
+  {t:'Indeed, with hardship comes ease.',s:'Quran 94:6'},
+  {t:'Whoever fears Allah — He will make for him a way out, and provide from where he does not expect.',s:'Quran 65:2–3'},
+  {t:'Allah does not burden a soul beyond that it can bear.',s:'Quran 2:286'},
+  {t:'In the remembrance of Allah do hearts find rest.',s:'Quran 13:28'},
+  {t:'Do not lose hope, nor be sad. You will be superior if you are indeed believers.',s:'Quran 3:139'},
+  {t:'And He found you lost and guided you.',s:'Quran 93:7'},
+  {t:'So which of the favors of your Lord would you deny?',s:'Quran 55:13'},
+];
+const AY=AYAHS[NOW.getDay()%AYAHS.length];
+['dash','sp'].forEach(p=>{
+  document.getElementById(p+'-ayah').textContent='\u201C'+AY.t+'\u201D';
+  document.getElementById(p+'-asrc').textContent='— '+AY.s;
+});
+const QUOTES=[
+  {t:'You do not rise to the level of your goals. You fall to the level of your systems.',s:'James Clear'},
+  {t:'Work like it depends on you. Pray like it depends on Allah.',s:'Classical wisdom'},
+  {t:'The secret of getting ahead is getting started.',s:'Mark Twain'},
+  {t:'Do the hard thing. Everyone else is avoiding it — that is where the opportunity is.',s:'Unknown'},
+  {t:'Success is a few simple disciplines, practiced every day.',s:'Jim Rohn'},
+  {t:'Your future self is watching you right now through your memories.',s:'Aubrey Marcus'},
+  {t:'Iron sharpens iron. Be around people who pull you up.',s:'Proverbs 27:17'},
+];
+const Q=QUOTES[NOW.getDay()%QUOTES.length];
+document.getElementById('dash-quote').innerHTML='\u201C'+Q.t+'\u201D<div class="quote-src">— '+Q.s+'</div>';
+
+// === XP SYSTEM ===
+const XP_ACTIONS={prayer_full:50,prayer_each:8,clean_day:30,tahajjud:40,quran_5:20,dhikr_99:15,income_log:25,deal_closed:100,skill_hour:10,idea_10:35,habit_day:5};
+const LEVELS=[
+  {level:1,title:'The Seeker',sub:'Every legend had a day one.',min:0,max:100},
+  {level:2,title:'The Grinder',sub:'You show up. Most people don\'t.',min:100,max:250},
+  {level:3,title:'The Builder',sub:'You\'re laying foundations.',min:250,max:500},
+  {level:4,title:'The Disciplined',sub:'You are becoming rare.',min:500,max:900},
+  {level:5,title:'The Operator',sub:'You run your life like a business.',min:900,max:1500},
+  {level:6,title:'The King',sub:'Barakah on every side.',min:1500,max:999999},
+];
+function addXP(n,reason){
+  S.xp+=n;persist();
+  renderGame();renderOverview();
+  const pill=document.getElementById('nav-xp');
+  pill.textContent='+'+n+' XP';pill.style.color='var(--teal)';
+  setTimeout(()=>{pill.textContent=S.xp+' XP';pill.style.color='var(--gold)';},1200);
+}
+function getLevel(){return LEVELS.find(l=>S.xp>=l.min&&S.xp<l.max)||LEVELS[LEVELS.length-1];}
+function renderGame(){
+  const lv=getLevel();
+  document.getElementById('nav-xp').textContent=S.xp+' XP';
+  document.getElementById('level-num').textContent=lv.level;
+  document.getElementById('level-title').textContent=lv.title;
+  document.getElementById('level-sub').textContent=lv.sub;
+  document.getElementById('xp-cur').textContent=S.xp+' XP';
+  document.getElementById('xp-next').textContent='Next level: '+lv.max+' XP';
+  const pct=lv.max===999999?100:Math.round((S.xp-lv.min)/(lv.max-lv.min)*100);
+  document.getElementById('xp-bar').style.width=pct+'%';
+  document.getElementById('ov-xp').textContent=S.xp;
+  document.getElementById('ov-xpb').style.width=Math.min(100,Math.round(S.xp/500*100))+'%';
+
+  // quests
+  const tp=S.prayers[TODAY]||{};
+  const pDone=['Fajr','Dhuhr','Asr','Maghrib','Isha'].filter(p=>tp[p]).length;
+  const QUESTS=[
+    {icon:'🕌',name:'Pray all 5',desc:'Complete Fajr, Dhuhr, Asr, Maghrib, Isha',xp:XP_ACTIONS.prayer_full,done:pDone===5},
+    {icon:'☽',name:'Tahajjud tonight',desc:'Log tahajjud for today',xp:XP_ACTIONS.tahajjud,done:!!S.tahajjud[NOW.getDay()]},
+    {icon:'📿',name:'Complete 99 dhikr',desc:'One full dhikr cycle',xp:XP_ACTIONS.dhikr_99,done:S.dhikr>=99},
+    {icon:'💪',name:'Clean day',desc:'Mark today as clean',xp:XP_ACTIONS.clean_day,done:S.streak>0},
+    {icon:'💡',name:'10 business ideas',desc:'Log 10 ideas today',xp:XP_ACTIONS.idea_10,done:(S.ideas.filter(i=>i.date===TODAY).length)>=10},
+    {icon:'💰',name:'Log income',desc:'Record any income today',xp:XP_ACTIONS.income_log,done:S.income.some(i=>new Date(i.date).toDateString()===TODAY)},
+  ];
+  document.getElementById('quest-list').innerHTML=QUESTS.map(q=>
+    `<div class="quest-card ${q.done?'done':''}">
+      <div class="quest-icon">${q.icon}</div>
+      <div class="quest-info"><div class="quest-name">${q.name}</div><div class="quest-desc">${q.desc}</div></div>
+      <div class="quest-xp">${q.done?'✓':'+'+q.xp+' XP'}</div>
+    </div>`
+  ).join('');
+
+  // achievements
+  const dealsC=S.deals.filter(d=>d.stage==='closed').length;
+  const ACHS=[
+    {icon:'🕌',name:'Prayer warrior',desc:'Pray all 5 in one day',done:pDone===5},
+    {icon:'🔥',name:'Week clean',desc:'7-day clean streak',done:S.streak>=7},
+    {icon:'💎',name:'Month clean',desc:'30-day clean streak',done:S.streak>=30},
+    {icon:'💰',name:'First dollar',desc:'Log your first income',done:S.income.length>0},
+    {icon:'🤝',name:'Deal maker',desc:'Close your first deal',done:dealsC>=1},
+    {icon:'🦁',name:'Closer',desc:'Close 5 deals',done:dealsC>=5},
+    {icon:'📿',name:'Dhikr master',desc:'Complete 99 dhikr',done:S.dhikr>=99},
+    {icon:'☽',name:'Night warrior',desc:'Pray Tahajjud 7 nights',done:Object.values(S.tahajjud).filter(Boolean).length>=7},
+    {icon:'💡',name:'Idea machine',desc:'Log 50 business ideas',done:S.ideas.length>=50},
+    {icon:'📈',name:'Four-figure month',desc:'Earn $1,000+ in a month',done:S.income.filter(i=>new Date(i.date).getMonth()===MO).reduce((s,i)=>s+i.amt,0)>=1000},
+  ];
+  document.getElementById('achievement-list').innerHTML=ACHS.map(a=>
+    `<div class="achievement ${a.done?'':'ach-locked'}">
+      <div class="ach-icon">${a.icon}</div>
+      <div class="ach-info"><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div></div>
+      ${a.done?'<span class="badge badge-teal">Done</span>':''}
+    </div>`
+  ).join('');
+
+  // xp breakdown
+  document.getElementById('xp-breakdown').innerHTML=`
+    <div class="pnl-row"><div class="pnl-label">Prayers</div><div class="pnl-val" style="color:var(--teal)">${pDone*XP_ACTIONS.prayer_each} XP</div></div>
+    <div class="pnl-row"><div class="pnl-label">Clean streak</div><div class="pnl-val" style="color:var(--teal)">${S.streak*XP_ACTIONS.clean_day} XP (est)</div></div>
+    <div class="pnl-row"><div class="pnl-label">Income logged</div><div class="pnl-val" style="color:var(--gold)">${S.income.length*XP_ACTIONS.income_log} XP</div></div>
+    <div class="pnl-row"><div class="pnl-label">Ideas logged</div><div class="pnl-val" style="color:var(--orange)">${S.ideas.length*2} XP</div></div>
+    <div class="pnl-row"><div class="pnl-label">Deals closed</div><div class="pnl-val" style="color:var(--green)">${dealsC*XP_ACTIONS.deal_closed} XP</div></div>
+    <div class="pnl-row"><div class="pnl-label">Total XP</div><div class="pnl-val" style="color:var(--purple)">${S.xp} XP</div></div>
+  `;
+
+  // hall of levels
+  document.getElementById('hall-levels').innerHTML=LEVELS.map(l=>
+    `<div class="leaderboard-row" style="${S.xp>=l.min?'':'opacity:.3'}">
+      <div class="lb-rank ${l.level<=1?'gold':''}">${l.level}</div>
+      <div class="lb-name">${l.title}</div>
+      <div class="lb-xp">${l.min} XP${S.xp>=l.min&&S.xp<l.max?' ←':''}</div>
+    </div>`
+  ).join('');
+}
+
+// === PRAYERS ===
+const PRAYERS=['Fajr','Dhuhr','Asr','Maghrib','Isha'];
+function renderPrayers(){
+  const tp=S.prayers[TODAY]||{};
+  const done=PRAYERS.filter(p=>tp[p]).length;
+  document.getElementById('p-badge').textContent=done+'/5';
+  document.getElementById('prayer-grid').innerHTML=PRAYERS.map(p=>
+    `<button class="pbtn ${tp[p]?'done':''}" onclick="togglePrayer('${p}')">${p}<div class="pck">${tp[p]?'✓':''}</div></button>`
+  ).join('');
+  document.getElementById('ov-p').textContent=done+'/5';
+  document.getElementById('ov-pb').style.width=(done/5*100)+'%';
+  updateScore();renderGame();
+}
+function togglePrayer(p){
+  if(!S.prayers[TODAY])S.prayers[TODAY]={};
+  const wasDone=S.prayers[TODAY][p];
+  S.prayers[TODAY][p]=!wasDone;
+  if(!wasDone)addXP(XP_ACTIONS.prayer_each,'prayer');
+  persist();renderPrayers();
+}
+renderPrayers();
+
+// === DHIKR ===
+const DCYC=['Subhanallah','Alhamdulillah','Allahu Akbar'];
+function renderDhikr(){
+  const c=S.dhikr%99,cyc=S.dhikrCyc%3,shown=(c===0&&S.dhikr>0)?99:c;
+  document.getElementById('dhikr-n').textContent=shown;
+  document.getElementById('dhikr-of').textContent=shown+'/99';
+  document.getElementById('dhikr-bar').style.width=(shown/99*100)+'%';
+  document.getElementById('dhikr-lbl').textContent=DCYC[cyc].toLowerCase();
+  document.getElementById('dhikr-cyc').textContent=cyc+1;
+}
+function dhikr(){
+  const before=Math.floor(S.dhikr/99);
+  S.dhikr++;
+  if(S.dhikr%99===0){S.dhikrCyc=(S.dhikrCyc+1)%3;addXP(XP_ACTIONS.dhikr_99,'dhikr');}
+  persist();renderDhikr();
+  const b=document.getElementById('dhikr-btn');
+  b.style.transform='scale(.96)';setTimeout(()=>b.style.transform='',110);
+}
+function resetDhikr(){S.dhikr=0;S.dhikrCyc=0;persist();renderDhikr();}
+renderDhikr();
+
+// === TAHAJJUD ===
+function renderTahajjud(){
+  const done=Object.values(S.tahajjud).filter(Boolean).length;
+  document.getElementById('tah-badge').textContent=done+' nights';
+  document.getElementById('tah-dots').innerHTML=DAYS.map((d,i)=>
+    `<div class="t-dot ${S.tahajjud[i]?'done':''}" onclick="toggleTah(${i})" title="${d}">${S.tahajjud[i]?'☽':d}</div>`
+  ).join('');
+}
+function toggleTah(i){
+  const was=S.tahajjud[i];
+  S.tahajjud[i]=!was;
+  if(!was)addXP(XP_ACTIONS.tahajjud,'tahajjud');
+  persist();renderTahajjud();updateScore();
+}
+renderTahajjud();
+
+// === DUAS ===
+function renderDuas(){
+  const pend=S.duas.filter(d=>!d.accepted);
+  const acc=S.duas.filter(d=>d.accepted);
+  document.getElementById('pending-wrap').style.display=pend.length?'block':'none';
+  document.getElementById('pending-duas').innerHTML=pend.map((d,_)=>{
+    const ri=S.duas.indexOf(d);
+    return `<div class="dua-card">
+      <div class="dua-text">${d.text}</div>
+      <div class="dua-footer">
+        <div class="dua-date">${d.date}${d.tag?' · '+d.tag:''}</div>
+        <div class="row" style="gap:4px">
+          <span class="dua-status pending">In progress</span>
+          <button class="btn btn-teal" onclick="acceptDua(${ri})" style="font-size:9px;padding:2px 8px">Mark accepted ✦</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('')||'<div style="font-size:11px;color:var(--text3);padding:5px 0">Write your first dua above.</div>';
+  const aw=document.getElementById('accepted-wrap');
+  aw.style.display=acc.length?'block':'none';
+  document.getElementById('accepted-duas').innerHTML=acc.map(d=>
+    `<div class="dua-card accepted">
+      <div class="dua-text">${d.text}</div>
+      <div class="dua-footer">
+        <div class="dua-date">${d.date}${d.tag?' · '+d.tag:''} · accepted ${d.acceptedDate}</div>
+        <span class="dua-status accepted">✦ Accepted</span>
+      </div>
+    </div>`
+  ).join('');
+}
+function addDua(){
+  const t=document.getElementById('dua-input').value.trim();if(!t)return;
+  S.duas.unshift({text:t,tag:document.getElementById('dua-tag').value.trim(),date:NOW.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),accepted:false});
+  document.getElementById('dua-input').value='';document.getElementById('dua-tag').value='';
+  persist();renderDuas();
+}
+function acceptDua(i){
+  S.duas[i].accepted=true;
+  S.duas[i].acceptedDate=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  persist();renderDuas();
+}
+renderDuas();
+
+// === QURAN ===
+function renderQuran(){
+  document.getElementById('quran-badge').textContent=S.quranW+' pages';
+  document.getElementById('quran-lbl').textContent=S.quranW;
+  document.getElementById('quran-bar').style.width=Math.min(100,Math.round(S.quranW/30*100))+'%';
+}
+function logQuran(){
+  const p=parseInt(document.getElementById('quran-in').value)||0;if(!p)return;
+  if(p>=5)addXP(XP_ACTIONS.quran_5,'quran');
+  S.quranW+=p;document.getElementById('quran-in').value='';
+  persist();renderQuran();updateScore();
+}
+renderQuran();
+
+// === JOURNAL ===
+document.getElementById('journal-in').value=S.journal;
+function saveJournal(){S.journal=document.getElementById('journal-in').value;persist();const b=document.querySelector('[onclick="saveJournal()"]');b.textContent='Saved ✓';b.style.color='var(--teal)';setTimeout(()=>{b.textContent='Save';b.style.color='';},1500);}
+
+// === DISCIPLINE ===
+function renderStreak(){
+  document.getElementById('d-streak').textContent=S.streak;
+  document.getElementById('d-best').textContent=S.best;
+  document.getElementById('d-mo').textContent=S.cleanMo;
+  document.getElementById('ov-s').textContent=S.streak;
+  document.getElementById('ov-sb').style.width=Math.min(100,Math.round(S.streak/30*100))+'%';
+  updateScore();
+}
+function markClean(){
+  S.streak++;S.cleanMo++;if(S.streak>S.best)S.best=S.streak;
+  addXP(XP_ACTIONS.clean_day,'clean');
+  persist();renderStreak();renderGame();
+}
+function markRelapse(){S.streak=0;persist();renderStreak();}
+renderStreak();
+
+const COPING=['Make wudu right now. The physical act resets your nervous system — it actually works.','Get up and do 30 push-ups immediately. Redirect that energy somewhere real.','Recite Ayatul Kursi 3 times out loud. Seek refuge in Allah, not distraction.','Change your environment. Stand up, go outside. Right now, not in a minute.','Text a real friend. The urge feeds on isolation — break it immediately.','Open Quran to a random page and read for 5 minutes. Shift your frequency.','Drink cold water slowly. Ground yourself in the physical moment.','Write what you\'re feeling. Naming the emotion weakens its hold on you.'];
+function logUrge(){
+  const t=document.getElementById('urge-sel').value||'Unspecified';
+  const tip=COPING[Math.floor(Math.random()*COPING.length)];
+  S.urges.unshift({time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),trigger:t});
+  if(S.urges.length>30)S.urges.pop();persist();
+  const el=document.getElementById('urge-tip');el.style.display='block';el.textContent=tip;
+  renderUrges();
+}
+function renderUrges(){
+  document.getElementById('urge-list').innerHTML=S.urges.slice(0,4).map(u=>
+    `<div class="li"><div><div class="li-lbl">${u.trigger}</div><div class="li-sub">${u.time}</div></div></div>`
+  ).join('');
+}
+renderUrges();
+
+const HABS=[{n:'Cold shower',c:'dt'},{n:'Gym / workout',c:'dt'},{n:'No social media',c:'dg'},{n:'Read / learn',c:'dg'}];
+function renderHabits(){
+  const html=HABS.map((h,hi)=>`
+    <div class="habit-row">
+      <div class="habit-name">${h.n}</div>
+      <div class="habit-days">${DAYS.map((d,di)=>{const k=hi+'_'+di,done=S.habits[k];return `<div class="hd ${done?h.c:''}" onclick="toggleHabit(${hi},${di})" title="${d}"></div>`;}).join('')}</div>
+    </div>`).join('');
+  ['habit-tracker','ov-habits'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
+}
+function toggleHabit(hi,di){
+  const k=hi+'_'+di;const was=S.habits[k];S.habits[k]=!was;
+  if(!was)addXP(XP_ACTIONS.habit_day,'habit');
+  persist();renderHabits();updateScore();
+}
+renderHabits();
+
+// === FOCUS ===
+function renderFocus(){
+  document.getElementById('focus-list').innerHTML=S.focus.slice(0,5).map((f,i)=>
+    `<div class="gi" onclick="toggleFocus(${i})"><div class="gck ${f.done?'done':''}">${f.done?'✓':''}</div><div class="gt ${f.done?'done':''}">${f.text}</div></div>`
+  ).join('')||'<div style="font-size:11px;color:var(--text3);padding:5px 0">Set your focus for today.</div>';
+}
+function addFocus(){const v=document.getElementById('focus-in').value.trim();if(!v)return;S.focus.unshift({text:v,done:false});document.getElementById('focus-in').value='';persist();renderFocus();}
+function toggleFocus(i){S.focus[i].done=!S.focus[i].done;persist();renderFocus();}
+renderFocus();
+
+function renderWins(){
+  document.getElementById('win-list').innerHTML=S.wins.slice(0,6).map(w=>
+    `<div class="li"><div class="li-lbl">✦ ${w}</div></div>`
+  ).join('')||'<div style="font-size:11px;color:var(--text3);padding:5px 0">Log your first win today.</div>';
+}
+function addWin(){const v=document.getElementById('win-in').value.trim();if(!v)return;S.wins.unshift(v);if(S.wins.length>30)S.wins.pop();document.getElementById('win-in').value='';persist();renderWins();}
+renderWins();
+
+// === INCOME ===
+function renderIncome(){
+  const moI=S.income.filter(i=>new Date(i.date).getMonth()===MO);
+  const mo=moI.reduce((s,i)=>s+i.amt,0);
+  const all=S.income.reduce((s,i)=>s+i.amt,0);
+  document.getElementById('ov-i').textContent='$'+mo.toLocaleString();
+  document.getElementById('ov-ib').style.width=Math.min(100,Math.round(mo/5000*100))+'%';
+  const zp=Math.min(100,Math.round(all/5200*100));
+  document.getElementById('zakat-fill').style.width=zp+'%';
+  document.getElementById('zakat-lbl').textContent=zp+'% of nisab';
+  document.getElementById('income-list').innerHTML=S.income.slice(0,5).map(i=>
+    `<div class="li"><div><div class="li-lbl">${i.desc}</div><div class="li-sub">${new Date(i.date).toLocaleDateString()}</div></div><div class="li-amt" style="color:var(--gold)">$${i.amt.toLocaleString()}</div></div>`
+  ).join('')||'<div style="font-size:11px;color:var(--text3);padding:5px 0">No income logged.</div>';
+  renderPnl();updateScore();
+}
+function addIncome(){
+  const d=document.getElementById('inc-desc').value.trim(),a=parseFloat(document.getElementById('inc-amt').value)||0;
+  if(!d||!a)return;
+  S.income.unshift({desc:d,amt:a,date:new Date().toISOString()});
+  document.getElementById('inc-desc').value='';document.getElementById('inc-amt').value='';
+  addXP(XP_ACTIONS.income_log,'income');
+  persist();renderIncome();renderGame();
+}
+renderIncome();
+
+// === EXPENSES ===
+function renderExpenses(){
+  const moE=S.expenses.filter(e=>new Date(e.date).getMonth()===MO).reduce((s,e)=>s+e.amt,0);
+  document.getElementById('expense-list').innerHTML=S.expenses.slice(0,5).map(e=>
+    `<div class="li"><div><div class="li-lbl">${e.desc}</div><div class="li-sub">${new Date(e.date).toLocaleDateString()}</div></div><div class="li-amt" style="color:var(--red)">-$${e.amt.toLocaleString()}</div></div>`
+  ).join('')||'<div style="font-size:11px;color:var(--text3);padding:5px 0">No expenses logged.</div>';
+  renderPnl();
+}
+function addExpense(){
+  const d=document.getElementById('exp-desc').value.trim(),a=parseFloat(document.getElementById('exp-amt').value)||0;
+  if(!d||!a)return;
+  S.expenses.unshift({desc:d,amt:a,date:new Date().toISOString()});
+  document.getElementById('exp-desc').value='';document.getElementById('exp-amt').value='';
+  persist();renderExpenses();
+}
+renderExpenses();
+
+function renderPnl(){
+  const rev=S.income.filter(i=>new Date(i.date).getMonth()===MO).reduce((s,i)=>s+i.amt,0);
+  const exp=S.expenses.filter(e=>new Date(e.date).getMonth()===MO).reduce((s,e)=>s+e.amt,0);
+  const net=rev-exp;
+  document.getElementById('biz-rev').textContent='$'+rev.toLocaleString();
+  document.getElementById('biz-exp').textContent='$'+exp.toLocaleString();
+  document.getElementById('biz-net').textContent='$'+net.toLocaleString();
+  document.getElementById('biz-net').style.color=net>=0?'var(--green)':'var(--red)';
+  document.getElementById('pnl-table').innerHTML=`
+    <div class="pnl-row"><div class="pnl-label">Revenue</div><div class="pnl-val" style="color:var(--gold)">$${rev.toLocaleString()}</div></div>
+    <div class="pnl-row"><div class="pnl-label">Expenses</div><div class="pnl-val" style="color:var(--red)">-$${exp.toLocaleString()}</div></div>
+    <div class="pnl-row"><div class="pnl-label">Net profit</div><div class="pnl-val" style="color:${net>=0?'var(--green)':'var(--red)'}">$${net.toLocaleString()}</div></div>
+    <div class="pnl-row"><div class="pnl-label">Profit margin</div><div class="pnl-val">${rev>0?Math.round(net/rev*100):0}%</div></div>
+  `;
+}
+
+// === NET WORTH ===
+document.getElementById('nw-val').textContent='$'+S.netWorth.toLocaleString();
+function updateNW(){
+  const v=parseFloat(document.getElementById('nw-in').value)||0;
+  S.netWorth=v;document.getElementById('nw-val').textContent='$'+v.toLocaleString();
+  document.getElementById('nw-in').value='';persist();
+}
+
+// === DEALS ===
+function renderDeals(){
+  ['prospect','pitched','closed'].forEach(stage=>{
+    document.getElementById('pipe-'+stage).innerHTML=S.deals.filter(d=>d.stage===stage).map((d,_)=>{
+      const ri=S.deals.indexOf(d);
+      const actions=stage==='prospect'?`<button class="deal-btn" onclick="moveDeal(${ri},'pitched')">→ Pitched</button><button class="deal-btn" onclick="moveDeal(${ri},'closed')">→ Closed</button>`
+        :stage==='pitched'?`<button class="deal-btn" onclick="moveDeal(${ri},'prospect')">← Back</button><button class="deal-btn" onclick="moveDeal(${ri},'closed')">→ Closed</button>`
+        :`<button class="deal-btn" onclick="moveDeal(${ri},'prospect')">← Reopen</button>`;
+      return `<div class="deal-card">
+        <div class="deal-name">${d.name}</div>
+        ${d.val?`<div class="deal-val">$${Number(d.val).toLocaleString()}</div>`:''}
+        <div class="deal-actions">${actions}</div>
+      </div>`;
+    }).join('')||'<div style="font-size:10px;color:var(--text3);padding:5px 0">No deals</div>';
+  });
+  const closed=S.deals.filter(d=>d.stage==='closed').length;
+  document.getElementById('biz-deals').textContent=closed;
+}
+function addDeal(){
+  const n=document.getElementById('deal-name').value.trim();if(!n)return;
+  S.deals.unshift({name:n,val:document.getElementById('deal-val').value,stage:'prospect',date:new Date().toISOString()});
+  document.getElementById('deal-name').value='';document.getElementById('deal-val').value='';
+  persist();renderDeals();
+}
+function moveDeal(i,stage){
+  const wasClosed=S.deals[i].stage==='closed';
+  S.deals[i].stage=stage;
+  if(stage==='closed'&&!wasClosed)addXP(XP_ACTIONS.deal_closed,'deal');
+  persist();renderDeals();renderGame();
+}
+renderDeals();
+
+// === SKILLS ===
+function renderSkills(){
+  document.getElementById('skill-list').innerHTML=S.skills.map((sk,i)=>
+    `<div class="skill-item">
+      <div class="skill-info">
+        <div class="skill-name">${sk.name}</div>
+        <div class="skill-hrs">${sk.hours||0} hours logged</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill" style="width:${Math.min(100,Math.round((sk.hours||0)/100*100))}%"></div></div>
+      </div>
+      <button class="btn btn-purple" onclick="logSkillHour(${i})" style="font-size:10px;padding:4px 9px">+1hr</button>
+    </div>`
+  ).join('')||'<div style="font-size:11px;color:var(--text3);padding:5px 0">Add a skill you\'re building.</div>';
+}
+function addSkill(){
+  const n=document.getElementById('skill-name').value.trim();if(!n)return;
+  S.skills.push({name:n,hours:0});document.getElementById('skill-name').value='';
+  persist();renderSkills();
+}
+function logSkillHour(i){S.skills[i].hours=(S.skills[i].hours||0)+1;addXP(XP_ACTIONS.skill_hour,'skill');persist();renderSkills();}
+renderSkills();
+
+// === IDEAS ===
+function renderIdeas(){
+  const todayIdeas=S.ideas.filter(i=>i.date===TODAY);
+  document.getElementById('idea-badge').textContent=todayIdeas.length+' today';
+  document.getElementById('idea-list').innerHTML=S.ideas.slice(0,10).map(id=>
+    `<div class="idea-item">${id.text}<span style="font-size:9px;color:var(--text3);display:block;margin-top:2px">${id.date===TODAY?'Today':id.date}</span></div>`
+  ).join('')||'<div style="font-size:11px;color:var(--text3);padding:5px 0">Write your first idea.</div>';
+}
+function addIdea(){
+  const v=document.getElementById('idea-in').value.trim();if(!v)return;
+  const todayCount=S.ideas.filter(i=>i.date===TODAY).length;
+  S.ideas.unshift({text:v,date:TODAY});
+  if(S.ideas.length>200)S.ideas.pop();
+  if(todayCount===9)addXP(XP_ACTIONS.idea_10,'ideas');
+  document.getElementById('idea-in').value='';persist();renderIdeas();renderGame();
+}
+renderIdeas();
+
+// === SCORE ===
+function updateScore(){
+  const tp=S.prayers[TODAY]||{};
+  const pP=PRAYERS.filter(p=>tp[p]).length/5;
+  const sP=Math.min(1,S.streak/30);
+  const mo=S.income.filter(i=>new Date(i.date).getMonth()===MO).reduce((s,i)=>s+i.amt,0);
+  const iP=Math.min(1,mo/5000);
+  const hP=Math.min(1,Object.values(S.habits).filter(Boolean).length/(HABS.length*7));
+  const tP=Object.values(S.tahajjud).filter(Boolean).length/7;
+  const score=Math.round((pP*.25+sP*.25+iP*.2+hP*.15+tP*.15)*100);
+  document.getElementById('life-score').textContent=score;
+  const C=[376.99,301.59,226.19];
+  [[pP,0],[iP,1],[sP,2]].forEach(([v,i])=>{document.getElementById(['rng-s','rng-w','rng-d'][i]).style.strokeDashoffset=C[i]*(1-v);});
+}
+updateScore();
+
+function renderOverview(){
+  document.getElementById('ov-xp').textContent=S.xp;
+  document.getElementById('ov-xpb').style.width=Math.min(100,Math.round(S.xp/500*100))+'%';
+}
+
+// === NAV ===
+function go(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.ntab').forEach((t,i)=>t.classList.toggle('active',['dash','spirit','disc','biz','game'][i]===id));
+  if(id==='game')renderGame();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// === ENTER KEYS ===
+const EM={'focus-in':addFocus,'win-in':addWin,'inc-amt':addIncome,'inc-desc':addIncome,'deal-name':addDeal,'skill-name':addSkill,'idea-in':addIdea,'quran-in':logQuran};
+Object.entries(EM).forEach(([id,fn])=>{const el=document.getElementById(id);if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')fn();});});
+
+renderGame();
+</script>
+</body>
+</html>
